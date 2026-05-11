@@ -1,8 +1,17 @@
+using GimnasioAPI.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+// 1. Leemos la cadena de conexión del appsettings.json
+var connectionString = builder.Configuration.GetConnectionString("ConexionMySQL");
+
+// 2. LA MAGIA: Registramos el DbContext para que EF Core lo encuentre
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 var app = builder.Build();
 
